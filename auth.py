@@ -9,16 +9,29 @@ db_config = {
     "database": "parking_system",
 }
 
+def get_role(username, name):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="proj",
+            password="proj",
+            database="parking_system"
+        )
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT role FROM parking_system.users WHERE name={name} AND username={username};")
+        role = cursor.fetchone()
+
+        return role
+    except Exception as e:
+        print(e)
+
 def get_creds():
     try:
-        try:
-            conn = mysql.connector.connect(
-                host="localhost",
-                user="proj",
-                password="proj",
-                database="parking_system")
-        except Exception as e:
-            print(e)
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="proj",
+            password="proj",
+            database="parking_system")
 
         try:
             cursor = conn.cursor()
@@ -49,15 +62,23 @@ def authenticate():
 
     credentials = {"usernames":{}}
 
-    for un, name, pw,in zip(usernames, names, passwords):
+    for un, name, pw in zip(usernames, names, passwords):
         user_dict = {"name":name,"password":pw}
         credentials["usernames"].update({un:user_dict})
-
+    print(credentials)
     authenticator = stauth.Authenticate(credentials, "cookie", "key", cookie_expiry_days=1)
     name, auth_status, username = authenticator.login("Login", "main")
     
     if auth_status:
-        authenticator.logout('Logout', 'main')
+        authenticator.logout('Logout', 'sidebar')
+        st.success(f"Successfully logged in as {username}")
+        role = get_role(username, name)
+        if role=="admin":
+            #TODO
+            pass
+        elif role=="operator":
+            #TODO
+            pass
     elif auth_status==False:
         st.error("Invalid username or password")
     else:
