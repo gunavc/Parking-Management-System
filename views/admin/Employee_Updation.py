@@ -1,6 +1,4 @@
 import streamlit as st
-<<<<<<< HEAD
-=======
 import mysql.connector
 import pandas as pd 
 
@@ -49,12 +47,9 @@ def update_employees(df):
     except Exception as e:
         st.error(e)
         return False
->>>>>>> 4c0223c (basic CRUD)
 
 def create_page():
     st.title("Update Employee Account")
-
-<<<<<<< HEAD
 
     st.write("Temporary placeholder for Updating Employee")
     st.markdown("""
@@ -64,7 +59,6 @@ def create_page():
     3. If we want to update the employee details, we press update, which brings up an interface similar to that of creating an employee, only here, the text boxes have placeholders, which are the original values of the employee details.
     4. If we want to delete the employee, we press the delete button, which pops a warning, asking us we are sure that we want to delete the employee. If we are sure, press delete again.
         """)
-=======
     df = get_employees()
 
     edited_df = st.data_editor(df)
@@ -83,4 +77,3 @@ def create_page():
     # 3. If we want to update the employee details, we press update, which brings up an interface similar to that of creating an employee, only here, the text boxes have placeholders, which are the original values of the employee details.
     # 4. If we want to delete the employee, we press the delete button, which pops a warning, asking us we are sure that we want to delete the employee. If we are sure, press delete again.
     #     """)
->>>>>>> 4c0223c (basic CRUD)

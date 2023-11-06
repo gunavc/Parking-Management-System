@@ -1,25 +1,4 @@
 import streamlit as st
-<<<<<<< HEAD
-
-def create_page():
-
-
-    st.title("All Parked Cars")
-    st.write("Placeholder for viewing all parked cars.")
-
-    st.markdown("""
-        The program must get details from the table of all the parked cars, and be able to view each car
-
-
-
-
-
-
-
-
-
-    """)
-=======
 import mysql.connector
 
 def show_parked_vehicles():
@@ -55,4 +34,4 @@ def create_page():
             st.write(f"Lot Number : {car_data[3]}")
     else:
         st.error("There are currently no cars parked")
->>>>>>> 4c0223c (basic CRUD)
+
