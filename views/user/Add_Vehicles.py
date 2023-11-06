@@ -1,4 +1,5 @@
 import streamlit as st
+import mysql.connector
 
 def add_vehicle(reg_no, vehicle_type, id):
     try:
@@ -10,8 +11,8 @@ def add_vehicle(reg_no, vehicle_type, id):
         )
         cursor = conn.cursor()
 
-        query = "INSERT INTO parking_system.parked_vehicles (reg_no, vehicle_type, entry_time, lot_no) VALUES (%s, %s, curdate(), %s);"
-        vals = (license_plate_no, vehicle_type, slot_no)
+        query = "INSERT INTO parking_system.vehicles(reg_no, vehicle_type, driver_id) VALUES(%s, %s, %s);"
+        vals = (reg_no, vehicle_type, id)
         cursor.execute(query, vals)
 
         conn.commit()
@@ -19,7 +20,6 @@ def add_vehicle(reg_no, vehicle_type, id):
         conn.close()
 
         return True
-
     except Exception as e:
         st.error(e)
         return False
@@ -41,7 +41,8 @@ def create_page(id):
             if license_plate_no == '':
                 st.error("Please fill all fields.")
             else:
-                st.success(f"{vehicle_type} with Plate, {license_plate_no} Successfully Added")
-
-        
-        
+                success = add_vehicle(license_plate_no, vehicle_type, id)
+                if success:
+                    st.success(f"{vehicle_type} with Plate, {license_plate_no} Successfully Added")
+                else:
+                    st.error("Vehicle Could not be Added")
