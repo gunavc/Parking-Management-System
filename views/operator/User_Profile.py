@@ -16,15 +16,6 @@ def create_page():
         "addr":"timbuktu"
     }
 
-
-
-
-
-
-
-
-
-
     # name
     st.header("Name")
     name_val, name_stopgap, name_edit = st.columns(3, gap="large")

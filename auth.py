@@ -31,6 +31,25 @@ def get_role(username1, name1):
     except Exception as e:
         print(e)
 
+def get_id(username1, name1):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="proj",
+            password="proj",
+            database="parking_system"
+        )
+        cursor = conn.cursor()
+        cursor.execute("SELECT userid FROM parking_system.users WHERE name=%s AND username=%s;", (name1, username1))
+        id = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return id
+    except Exception as e:
+        print(e)
+
 def get_creds():
     try:
         conn = mysql.connector.connect(
@@ -42,7 +61,7 @@ def get_creds():
         try:
             cursor = conn.cursor()
             cursor.execute("USE parking_system;")
-            cursor.execute(f"SELECT name, username, password, role FROM parking_system.users;")
+            cursor.execute("SELECT name, username, password, role FROM parking_system.users;")
         except Exception as e:
             print(e)
         users = cursor.fetchall()
@@ -74,22 +93,22 @@ def authenticate():
 
     authenticator = stauth.Authenticate(credentials, "cookie", "key", cookie_expiry_days=1)
     name, auth_status, username = authenticator.login("Login", "main")
-    
+    #print(name, auth_status, username)
     if auth_status:
         authenticator.logout('Logout', 'sidebar')
         st.success(f"Successfully logged in as {username}")
         role = get_role(username, name)
-        print(role[0])
         if role[0]=="admin":
             #TODO
             #pass
             # st.session_state.runpage = Parking_Analytics
             # st.session_state.runpage()
             # st.experimental_rerun()
+            id = get_id(name, username)
             Admin.create_page()
         elif role=="operator":
             #TODO
-            pass
+            id = get_id(name, username)
     elif auth_status==False:
         st.error("Invalid username or password")
     else:
