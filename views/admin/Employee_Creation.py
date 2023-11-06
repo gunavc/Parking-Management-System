@@ -1,4 +1,26 @@
 import streamlit as st
+import mysql.connector
+
+def create_emp(fname, lname, empid, role, lnum):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="proj",
+            password="proj",
+            database="parking_system"
+        )
+        cursor = conn.cursor()
+
+        cursor.execute("INSERT INTO parking_system.employees (fname, lname, empid, role, lot_no) VALUES (%s,%s,%s,%s,%s);", (fname, lname, empid, role, lnum))
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return True
+    except Exception as e:
+        st.error(e)
+        return False
 
 def create_page():
     st.title("Create Employee Account")
@@ -17,7 +39,12 @@ def create_page():
             if first_name == '' or last_name == '' or employee_id == '' or role == '' or lot_no == '':
                 st.error("Please Fill All Fields")
             else:
-                st.success("Account Successfully Created")
+                success = create_emp(first_name, last_name, employee_id, role, lot_no)
+                if success:
+                    st.success("Account Created Successfully")
+                else:
+                    st.error("Account could not be Created")
+                #st.success("Account Successfully Created")
         # if st.button("Create Account"):
         #     if first_name and last_name and employee_id:
         #     # Insert employee details into the database

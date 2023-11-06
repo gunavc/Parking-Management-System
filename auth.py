@@ -1,6 +1,9 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 import mysql.connector
+from views.admin import Admin
+# from views.operator import Operator
+# from views.user import User
 
 db_config = {
     "host": "localhost",
@@ -9,7 +12,7 @@ db_config = {
     "database": "parking_system",
 }
 
-def get_role(username, name):
+def get_role(username1, name1):
     try:
         conn = mysql.connector.connect(
             host="localhost",
@@ -18,8 +21,11 @@ def get_role(username, name):
             database="parking_system"
         )
         cursor = conn.cursor()
-        cursor.execute(f"SELECT role FROM parking_system.users WHERE name={name} AND username={username};")
+        cursor.execute("SELECT role FROM parking_system.users WHERE name=%s AND username=%s;", (name1, username1))
         role = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
 
         return role
     except Exception as e:
@@ -65,7 +71,7 @@ def authenticate():
     for un, name, pw in zip(usernames, names, passwords):
         user_dict = {"name":name,"password":pw}
         credentials["usernames"].update({un:user_dict})
-    print(credentials)
+
     authenticator = stauth.Authenticate(credentials, "cookie", "key", cookie_expiry_days=1)
     name, auth_status, username = authenticator.login("Login", "main")
     
@@ -73,9 +79,14 @@ def authenticate():
         authenticator.logout('Logout', 'sidebar')
         st.success(f"Successfully logged in as {username}")
         role = get_role(username, name)
-        if role=="admin":
+        print(role[0])
+        if role[0]=="admin":
             #TODO
-            pass
+            #pass
+            # st.session_state.runpage = Parking_Analytics
+            # st.session_state.runpage()
+            # st.experimental_rerun()
+            Admin.create_page()
         elif role=="operator":
             #TODO
             pass
