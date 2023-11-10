@@ -1,3 +1,5 @@
 __pycache__
 .git
-
+views/admin/__pycache__
+views/operator/__pycache__
+views/user/__pycache__
