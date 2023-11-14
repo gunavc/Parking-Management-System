@@ -14,7 +14,7 @@ def get_employees():
 
         cursor.execute("SELECT * FROM parking_system.employees;")
 
-        df = pd.DataFrame(cursor.fetchall(), columns=["First_name", "Last_name", "Employee id", "Role", "Lot_no"])
+        df = pd.DataFrame(cursor.fetchall(), columns=["First_name", "Last_name", "Employee id", "Role", "Lot_no", "address"])
 
         conn.commit()
         cursor.close()
@@ -35,8 +35,8 @@ def update_employees(df):
         cursor = conn.cursor()
 
         for index, row in df.iterrows():
-            query = "UPDATE parking_system.employees SET fname=%s, lname=%s, empid=%s, role=%s, lot_not=%s;"
-            vals = (row["First_name"], row["Last_name"], row["Employee id"], row["Role"], row["Lot_no"])
+            query = "UPDATE parking_system.employees SET fname=%s, lname=%s, empid=%s, role=%s, lot_not=%s, address=%s;"
+            vals = (row["First_name"], row["Last_name"], row["Employee id"], row["Role"], row["Lot_no"], row["address"])
             cursor.execute(query, vals)
 
         conn.commit()
