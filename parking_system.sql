@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS parking_system;
+USE parking_system;
 
 CREATE TABLE users(
 name varchar(50),
@@ -7,7 +8,7 @@ password varchar(200),
 role varchar(10),
 userid varchar(20) primary key);
 
-INSERT INTO users VALUES("admin", "admin", "$2b$12$rC3r6yhLAJFu8Ownd19wF.XSaPa5inXH2g0C3PXFtsHrEt.aqvw06", "admin", "A001");
+INSERT INTO users VALUES("admin", "admin", "$2b$12$rC3r6yhLAJFu8Ownd19wF.XSaPa5inXH2g0C3PXFtsHrEt.aqvw06", "Admin", "A001");
 
 CREATE TABLE employees(
 fname varchar(50),
@@ -49,7 +50,7 @@ AFTER INSERT ON parked_vehicles
 FOR EACH ROW
 BEGIN
     UPDATE vehicles
-    SET is_parked = 1
+    SET isparked = 1
     WHERE reg_no = NEW.reg_no;
 END;
 
@@ -60,10 +61,44 @@ AFTER DELETE ON parked_vehicles
 FOR EACH ROW
 BEGIN
     UPDATE vehicles
-    SET is_parked = 0
+    SET isparked = 0
     WHERE reg_no = OLD.reg_no;
 END;
 
 //
 
 DELIMITER ;
+
+
+DELIMITER //
+
+CREATE FUNCTION calculate_total_price(
+    entry_time DATETIME,
+    exit_time DATETIME,
+    vehicle VARCHAR(5)
+)
+RETURNS DECIMAL(10, 2)
+READS SQL DATA
+BEGIN
+    DECLARE duration_seconds INT;
+    DECLARE duration_days DECIMAL(10, 2);
+    DECLARE daily_price DECIMAL(10, 2);
+
+    -- Calculate duration in seconds
+    SET duration_seconds = TIMESTAMPDIFF(SECOND, entry_time, exit_time);
+
+    -- Calculate duration in days
+    SET duration_days = duration_seconds / (24 * 60 * 60);
+
+    -- Retrieve the daily price from cost_matrix
+    SELECT price INTO daily_price
+    FROM parking_system.cost_matrix
+    WHERE cost_matrix.vehicle_type = vehicle;
+
+    -- Calculate total price
+    RETURN duration_days * daily_price;
+END //
+
+DELIMITER ;
+
+GRANT EXECUTE ON FUNCTION parking_system.calculate_total_price TO 'proj'@'localhost';

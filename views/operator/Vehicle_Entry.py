@@ -29,8 +29,10 @@ def create_page():
     st.title("Vehicle Entry")
 
     with st.form("Vehicle Entry"):
-        license_plate_no = st.text_input("License Plate Number")
-        vehicle_type = st.text_input("Vehicle Type")
+        license_plate_no = st.text_input("License Plate Number").upper()
+        # vehicle_type = st.text_input("Vehicle Type")
+        vehicle_type_options = ["Car", "Bike"]
+        vehicle_type = st.selectbox("Select Vehicle Type", vehicle_type_options)
         slot_no = st.text_input("Slot Number")
         enter_vehicle = st.form_submit_button("Enter Vehicle")
         if enter_vehicle:

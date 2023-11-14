@@ -36,12 +36,14 @@ def create_page():
         first_name = st.text_input("First Name")
         username = st.text_input("Username")
         password = st.text_input("Password")
-        role = st.text_input("Role")
+        #role = st.text_input("Role")
+        role_options = ["Admin", "Operator", "User"]
+        role = st.selectbox("Select Role", role_options)
         password = stauth.Hasher([password]).generate()[0]
         account_created = st.form_submit_button("Create Acccount")
         if account_created:
             # Temporary success message
-            if user_id=="" or first_name == '' or username == '' or password == '' or role=="":
+            if user_id=="" or first_name == '' or username == '' or password == '' or role==None:
                 st.error("Please Fill All Fields")
             else:
                 success = create_user(user_id, first_name, username, password, role)

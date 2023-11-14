@@ -34,7 +34,7 @@ def create_page(id):
     # )
 
     with st.form("Add Vehicle"):
-        license_plate_no = st.text_input("Licence Plate Number")
+        license_plate_no = st.text_input("Licence Plate Number").upper()
         vehicle_type = st.selectbox("Vehicle Type", ["Car","Bike"])
         vehicle_added = st.form_submit_button("Add Vehicle")
         if vehicle_added:

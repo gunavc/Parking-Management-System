@@ -41,7 +41,7 @@ def update_employees(df):
                 cursor.execute(query, vals)
             elif row["Mark to Delete"]==True:
                 query = "DELETE FROM parking_system.employees WHERE empid=%s;"
-                vals = (row["Employee id"])
+                vals = (row["Employee id"], )
                 cursor.execute(query, vals)
 
         conn.commit()

@@ -13,26 +13,18 @@ def vehicle_exit(license_plate_no):
         cursor = conn.cursor()
 
         query = "SELECT vehicle_type, entry_time FROM parking_system.parked_vehicles WHERE reg_no=%s;"
-        vals = (license_plate_no)
+        vals = (license_plate_no, )
         cursor.execute(query, vals)
         data = cursor.fetchone()
         exit_time = datetime.now()
 
-        # duration = exit_time - data[1]
-
-        # cursor.execute("SELECT price FROM parking_system.cost_matrix WHERE vehicle_type=%s;",data[0])
-        # c = cursor.fetchone
-
-        # price = duration * c
-
         vehicle_type = data[0]
         entry_time = data[1]
-        cursor.callproc('calculate_total_price', (entry_time, exit_time, vehicle_type))
-        
-        price = None
-        for price in cursor.stored_results():
-            price = price.fetchone()[0]
 
+        cursor.execute("SELECT calculate_total_price(%s, %s, %s)", (entry_time, exit_time, vehicle_type))
+        price = cursor.fetchone()
+
+        cursor.execute("DELETE FROM parking_system.parked_vehicles WHERE reg_no=%s", vals)
         conn.commit()
         cursor.close()
         conn.close()
@@ -67,7 +59,7 @@ def create_page():
     st.title("Vehicle Exit")
 
     with st.form("Vehicle Exit"):
-        license_plate_no = st.text_input("License Plate Number")
+        license_plate_no = st.text_input("License Plate Number").upper()
         # Find vehicle from database and then exit it, and make the slot empty
         exit_vehicle = st.form_submit_button("Exit Vehicle")
 

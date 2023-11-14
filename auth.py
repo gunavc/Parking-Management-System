@@ -98,13 +98,13 @@ def authenticate():
         authenticator.logout('Logout', 'sidebar')
         st.success(f"Successfully logged in as {username}")
         role = get_role(username, name)
-        if role[0]=="admin":
+        if role[0]=="Admin":
             id = get_id(name, username)
             Admin.create_page()
-        elif role[0]=="operator":
+        elif role[0]=="Operator":
             id = get_id(name, username)
             Operator.create_page(id[0])
-        elif role[0]=="user":
+        elif role[0]=="User":
             id = get_id(name, username)
             User.create_page(id[0])
 
