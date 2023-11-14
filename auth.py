@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import mysql.connector
 from views.admin import Admin
-# from views.operator import Operator
+from views.operator import Operator
 # from views.user import User
 
 db_config = {
@@ -106,9 +106,10 @@ def authenticate():
             # st.experimental_rerun()
             id = get_id(name, username)
             Admin.create_page()
-        elif role=="operator":
+        elif role[0]=="operator":
             #TODO
             id = get_id(name, username)
+            Operator.create_page(id)
     elif auth_status==False:
         st.error("Invalid username or password")
     else:

@@ -1,6 +1,28 @@
 import streamlit as st
+import mysql.connector
 
-def create_page():
+def get_name(id):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="proj",
+            password="proj",
+            database="parking_system"
+        )
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM parking_system.employees WHERE empid=%s", (id, ))
+        data = cursor.fetchone()
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return data
+    except Exception as e:
+        st.error(e)
+
+
+def create_page(id):
     # Set of bools for attribute changes
     name_change = False
     addr_change = False

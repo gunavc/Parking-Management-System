@@ -1,8 +1,9 @@
 import streamlit as st
 import mysql.connector
+import streamlit_authenticator as stauth
 
 # SCHEMA FOR USER: name, username, password, role, userid
-def create_user(fname, lname, username, password):
+def create_user(user_id, fname, username, password, role):
     try:
         conn = mysql.connector.connect(
             host="localhost",
@@ -12,7 +13,7 @@ def create_user(fname, lname, username, password):
         )
         cursor = conn.cursor()
 
-        cursor.execute("INSERT INTO parking_system.users (fname, lname, username, password) VALUES (%s,%s,%s,%s);", (fname, lname, username, password))
+        cursor.execute("INSERT INTO parking_system.users (name, username, password, role, userid) VALUES (%s,%s,%s,%s, %s);", (fname, username, password, role, user_id))
         conn.commit()
 
         cursor.close()
@@ -31,19 +32,19 @@ def create_page():
     st.title("Create User Account")
     # Add input fields for employee details
     with st.form("User Creation"):
-
+        user_id = st.text_input("User ID")
         first_name = st.text_input("First Name")
-        last_name = st.text_input("Last Name")
         username = st.text_input("Username")
-        password = st.text_input("Password", type=password)
-
+        password = st.text_input("Password")
+        role = st.text_input("Role")
+        password = stauth.Hasher([password]).generate()[0]
         account_created = st.form_submit_button("Create Acccount")
         if account_created:
             # Temporary success message
-            if first_name == '' or last_name == '' or username == '' or password == '':
+            if user_id=="" or first_name == '' or username == '' or password == '' or role=="":
                 st.error("Please Fill All Fields")
             else:
-                success = create_user(first_name, last_name, username, password)
+                success = create_user(user_id, first_name, username, password, role)
                 if success:
                     st.success("Account Created Successfully")
                 else:

@@ -26,7 +26,7 @@ def create_page():
     st.title("Create Employee Account")
     # Add input fields for employee details
     with st.form("Employee Creation"):
-
+        lot_no = ''
         first_name = st.text_input("First Name")
         last_name = st.text_input("Last Name")
         employee_id = st.text_input("Employee ID")
@@ -36,7 +36,7 @@ def create_page():
         account_created = st.form_submit_button("Create Acccount")
         if account_created:
             # Temporary success message
-            if first_name == '' or last_name == '' or employee_id == '' or role == '' or lot_no == '':
+            if first_name == '' or last_name == '' or employee_id == '' or role == '':
                 st.error("Please Fill All Fields")
             else:
                 success = create_emp(first_name, last_name, employee_id, role, lot_no)

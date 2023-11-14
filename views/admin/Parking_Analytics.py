@@ -41,7 +41,7 @@ def create_page():
     st.header("display ticket database")
 
 
-create_page()
+#create_page()
         
     
 
