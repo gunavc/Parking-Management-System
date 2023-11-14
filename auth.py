@@ -103,11 +103,11 @@ def authenticate():
             Admin.create_page()
         elif role[0]=="operator":
             id = get_id(name, username)
-            Operator.create_page(id)
+            Operator.create_page(id[0])
         elif role[0]=="user":
             id = get_id(name, username)
-            User.create_page(id)
-            
+            User.create_page(id[0])
+
     elif auth_status==False:
         st.error("Invalid username or password")
     else:

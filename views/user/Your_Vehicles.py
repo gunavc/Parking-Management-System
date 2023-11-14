@@ -12,7 +12,7 @@ def parked_vehicles(id):
         cursor = conn.cursor()
 
         query = "SELECT reg_no, vehicle_type FROM parking_system.vehicles WHERE driver_id=%s and isparked=1;"
-        cursor.execute(query, (id))
+        cursor.execute(query, (id, ))
         p_vehicles = cursor.fetchall()
 
         conn.commit()
@@ -34,7 +34,7 @@ def notparked_vehicles(id):
         cursor = conn.cursor()
 
         query = "SELECT reg_no, vehicle_type FROM parking_system.vehicles WHERE driver_id=%s and isparked=0;"
-        cursor.execute(query, (id))
+        cursor.execute(query, (id, ))
         np_vehicles = cursor.fetchall()
 
         conn.commit()

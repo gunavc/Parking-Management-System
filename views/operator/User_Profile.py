@@ -9,8 +9,9 @@ def get_name(id):
             password="proj",
             database="parking_system"
         )
+
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM parking_system.employees WHERE empid=%s", (id))
+        cursor.execute("SELECT * FROM parking_system.employees WHERE empid=%s", (id, ))
         data = cursor.fetchone()
 
         conn.commit()
@@ -21,7 +22,7 @@ def get_name(id):
     except Exception as e:
         st.error(e)
 
-def update_name(fname, lname, id):
+def update_name(fname, lname, employee_id):
     try:
         conn = mysql.connector.connect(
             host="localhost",
@@ -29,9 +30,9 @@ def update_name(fname, lname, id):
             password="proj",
             database="parking_system"
         )
+        #print(fname, lname, employee_id)
         cursor = conn.cursor()
-        cursor.execute("UPDATE employees SET fname=%s WHERE empid=%s", (fname, id))
-        cursor.execute("UPDATE employees SET lname=%s WHERE empid=%s", (lname, id))
+        cursor.execute("UPDATE employees SET fname=%s, lname=%s WHERE empid=%s", (fname, lname, employee_id))
 
         conn.commit()
         cursor.close()
@@ -79,9 +80,10 @@ def create_page(id):
             with name_val:
                 new_name = str(st.text_input(
                     label="Enter Your New Name", 
-                    value=user_details[0] + " " +user_details[1],
+                    #value=user_details[0] + " " +user_details[1],
                     placeholder="First_Name Last_Name"))
-                new__name = new_name.split(" ")
+                new_name = new_name.split(" ")
+                print(new_name)
                 update_name(new_name[0], new_name[1], id)
 
     st.divider()

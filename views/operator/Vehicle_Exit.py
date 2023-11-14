@@ -18,12 +18,20 @@ def vehicle_exit(license_plate_no):
         data = cursor.fetchone()
         exit_time = datetime.now()
 
-        duration = exit_time - data[1]
+        # duration = exit_time - data[1]
 
-        cursor.execute("SELECT price FROM parking_system.cost_matrix WHERE vehicle_type=%s;",data[0])
-        c = cursor.fetchone
+        # cursor.execute("SELECT price FROM parking_system.cost_matrix WHERE vehicle_type=%s;",data[0])
+        # c = cursor.fetchone
 
-        price = duration * c
+        # price = duration * c
+
+        vehicle_type = data[0]
+        entry_time = data[1]
+        cursor.callproc('calculate_total_price', (entry_time, exit_time, vehicle_type))
+        
+        price = None
+        for price in cursor.stored_results():
+            price = price.fetchone()[0]
 
         conn.commit()
         cursor.close()
