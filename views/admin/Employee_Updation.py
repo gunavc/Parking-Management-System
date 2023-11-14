@@ -15,7 +15,7 @@ def get_employees():
         cursor.execute("SELECT * FROM parking_system.employees;")
 
         df = pd.DataFrame(cursor.fetchall(), columns=["First_name", "Last_name", "Employee id", "Role", "Lot_no", "address"])
-
+        df["Mark to Delete"] = False
         conn.commit()
         cursor.close()
         conn.close()
@@ -35,9 +35,14 @@ def update_employees(df):
         cursor = conn.cursor()
 
         for index, row in df.iterrows():
-            query = "UPDATE parking_system.employees SET fname=%s, lname=%s, role=%s, lot_not=%s, address=%s WHERE empid=%s;"
-            vals = (row["First_name"], row["Last_name"], row["Role"], row["Lot_no"], row["address"], row["Employee id"])
-            cursor.execute(query, vals)
+            if row["Mark to Delete"]==False:
+                query = "UPDATE parking_system.employees SET fname=%s, lname=%s, role=%s, lot_no=%s, address=%s WHERE empid=%s;"
+                vals = (row["First_name"], row["Last_name"], row["Role"], row["Lot_no"], row["address"], row["Employee id"])
+                cursor.execute(query, vals)
+            elif row["Mark to Delete"]==True:
+                query = "DELETE FROM parking_system.employees WHERE empid=%s;"
+                vals = (row["Employee id"])
+                cursor.execute(query, vals)
 
         conn.commit()
         cursor.close()
